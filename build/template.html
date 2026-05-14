@@ -1,0 +1,1714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Texas SBEC Disciplinary Action Reports — Search & Statistics</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --border: #d8dde6;
+    --border-strong: #b6bdcb;
+    --text: #1a1f2e;
+    --muted: #5a6478;
+    --accent: #1f4ea1;
+    --accent-soft: #e8effc;
+    --danger: #b3261e;
+    --warn: #8a6a00;
+    --ok: #1e7d3a;
+    --row-alt: #fafbfd;
+    --chip: #eef1f7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  header.app-header {
+    background: linear-gradient(135deg, #1b3a73 0%, #2a5db0 100%);
+    color: #fff;
+    padding: 18px 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .app-header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .app-header .sub {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav.tabs button {
+    background: none;
+    border: 0;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+  }
+  nav.tabs button:hover { color: var(--text); }
+  nav.tabs button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  nav.tabs .spacer { flex: 1; }
+  nav.tabs .meta {
+    align-self: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding-right: 6px;
+  }
+  main { padding: 18px 24px 64px; }
+  section.tab-panel { display: none; }
+  section.tab-panel.active { display: block; }
+
+  .filter-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .filter-bar label.wide { grid-column: span 2; min-width: 220px; }
+  .filter-bar label.checkbox-filter .checkbox-row {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 9px; border: 1px solid var(--border-strong);
+    border-radius: 5px; background: #fff; font-size: 13px; color: var(--text);
+    cursor: pointer; user-select: none;
+  }
+  .filter-bar label.checkbox-filter .checkbox-row:hover { background: var(--accent-soft); }
+  .filter-bar label.checkbox-filter input[type="checkbox"] {
+    width: 14px; height: 14px; margin: 0;
+  }
+  .filter-bar label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .filter-bar input, .filter-bar select {
+    padding: 7px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 5px;
+    background: #fff;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .filter-bar input:focus, .filter-bar select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 2px 10px;
+    flex-wrap: wrap;
+  }
+  .toolbar .count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .toolbar .count b { color: var(--text); }
+  .toolbar .spacer { flex: 1; }
+  button.btn, a.btn {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+    text-decoration: none;
+  }
+  button.btn:hover { background: var(--chip); }
+  button.btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  button.btn.primary:hover { background: #1a4290; }
+
+  table.results {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+  }
+  table.results th {
+    background: #f1f4f9;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  table.results th.tool-col, table.results td.tool-col { width: 38px; padding: 6px 8px; cursor: default; text-align: center; }
+  table.results th.expand-col, table.results td.expand-col { width: 28px; padding: 8px 4px 8px 8px; cursor: default; }
+  button.search-btn {
+    background: none; border: 0; padding: 4px; cursor: pointer; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  button.search-btn:hover { background: var(--accent-soft); }
+  button.search-btn svg { display: block; }
+  button.expand-btn {
+    background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted);
+    font-size: 11px; width: 18px; height: 18px; line-height: 18px;
+    border-radius: 3px; transition: transform 0.15s;
+  }
+  button.expand-btn:hover { background: var(--chip); color: var(--text); }
+  button.expand-btn.open { transform: rotate(90deg); }
+  table.results tr.has-children td { background: #eef3fb !important; font-weight: 500; }
+  table.results tr.has-children:hover td { background: var(--accent-soft) !important; }
+  table.results tr.has-children.expanded td { background: #1f4ea1 !important; color: #fff; }
+  table.results tr.has-children.expanded:hover td { background: #1a4290 !important; }
+  table.results tr.has-children.expanded .record-badge { background: #fff; color: var(--accent); }
+  table.results tr.has-children.expanded .summary-detail { color: rgba(255,255,255,0.85); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  table.results tr.child-row td { background: #f7f9fd !important; padding-left: 12px; font-size: 13px; color: #2d3650; }
+  table.results tr.child-row:hover td { background: var(--accent-soft) !important; }
+  table.results tr.child-row td.first-cell { padding-left: 28px; }
+  span.record-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 100px;
+    font-size: 10px; font-weight: 600; background: var(--accent); color: #fff;
+    margin-left: 8px; vertical-align: middle;
+  }
+  table.results th .arrow { opacity: 0.5; margin-left: 4px; font-size: 10px; }
+  table.results th.sorted { color: var(--accent); }
+  table.results th.sorted .arrow { opacity: 1; }
+  table.results td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.results tr:nth-child(even) td { background: var(--row-alt); }
+  table.results tr:hover td { background: var(--accent-soft); cursor: pointer; }
+  table.results tr.empty td { text-align: center; color: var(--muted); padding: 32px; cursor: default; }
+
+  .sanction-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--chip);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .sb-Revocation, .sb-Permanent-Revocation { background: #fbe3e1; color: var(--danger); }
+  .sb-Permanent-Surrender { background: #fbe3e1; color: var(--danger); }
+  .sb-Voluntary-Surrender { background: #fcecd2; color: var(--warn); }
+  .sb-Suspension, .sb-Probated-Suspension, .sb-Indefinite-Suspension { background: #fff4ce; color: #6b520d; }
+  .sb-Reprimand, .sb-Inscribed-Reprimand { background: #e1eafc; color: var(--accent); }
+  .sb-Certificate-Denied, .sb-Cancelled, .sb-Cancelled-for-Misconduct { background: #ece9ff; color: #483aa5; }
+  .sb-Restriction { background: #e8f3e9; color: var(--ok); }
+  .sb-Reinstated { background: #d9f1e0; color: var(--ok); }
+
+  .pagination {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    padding: 14px 0;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .pagination button {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .pagination button:disabled { opacity: 0.4; cursor: default; }
+  .pagination .page-num { margin: 0 6px; }
+  .page-size-sel { margin-left: 12px; padding: 5px; border: 1px solid var(--border-strong); border-radius: 4px; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,22,40,0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--panel);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    width: min(720px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+  }
+  .modal header.modal-head {
+    padding: 18px 22px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    background: transparent;
+    box-shadow: none;
+    color: var(--text);
+  }
+  .modal header.modal-head h2 { margin: 0; font-size: 18px; }
+  .modal header.modal-head .close {
+    background: none; border: 0; cursor: pointer; font-size: 20px; color: var(--muted);
+    padding: 2px 6px;
+  }
+  .modal .body { padding: 18px 22px 22px; }
+  .modal .body dl {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 8px 16px;
+    margin: 0;
+  }
+  .modal .body dt { color: var(--muted); font-size: 12px; padding-top: 2px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .modal .body dd { margin: 0; font-size: 14px; }
+  .glossary-note {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13px;
+    color: #213a6a;
+  }
+  .glossary-note .label {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .modal .actions {
+    display: flex; gap: 8px; justify-content: flex-end;
+    padding: 12px 22px 22px;
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stat-card .v {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+  .stat-card .k {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .chart-row.full { grid-template-columns: 1fr; }
+  .chart-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px 18px;
+  }
+  .chart-card h3 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+  }
+  .chart-card .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  svg.chart { width: 100%; display: block; }
+  svg.chart .axis text { font-size: 10px; fill: var(--muted); }
+  svg.chart .axis line { stroke: #cdd3df; }
+  svg.chart .grid line { stroke: #eaeef5; }
+  svg.chart .bar { fill: var(--accent); }
+  svg.chart .bar:hover { fill: #2a5db0; }
+  svg.chart .line { fill: none; stroke: var(--accent); stroke-width: 2; }
+  svg.chart .dot { fill: var(--accent); }
+  svg.chart .area { fill: var(--accent); opacity: 0.12; }
+  svg.chart .label { font-size: 11px; fill: var(--text); }
+  svg.chart .value-label { font-size: 10px; fill: var(--muted); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .legend .item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+
+  .top-list {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .top-list .bar-bg {
+    grid-column: 1 / -1;
+    height: 6px;
+    background: var(--chip);
+    border-radius: 3px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .top-list .bar-fg {
+    height: 100%;
+    background: var(--accent);
+  }
+  .top-list .row { display: flex; gap: 8px; }
+  .top-list .name { flex: 1; }
+  .top-list .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  details.disclaimer {
+    background: #fff8e6;
+    border: 1px solid #f0d98a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #5a4500;
+  }
+  details.disclaimer summary { cursor: pointer; font-weight: 600; }
+
+  .glossary-dl { display: grid; grid-template-columns: 200px 1fr; gap: 8px 16px; margin: 0; }
+  .glossary-dl dt { font-weight: 600; color: var(--accent); margin: 0; }
+  .glossary-dl dd { margin: 0; }
+  .alleg-dl { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px; margin: 0; }
+  .alleg-dl dt { font-weight: 600; color: var(--accent); font-family: Menlo, monospace; margin: 0; }
+  .alleg-dl dd { margin: 0; }
+
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .app-header, nav.tabs, .filter-bar, .toolbar, .pagination, .no-print { display: none !important; }
+    main { padding: 0; }
+    section.tab-panel { display: block !important; }
+    .stat-card, .chart-card, table.results, .modal { box-shadow: none; border-color: #999; }
+    .modal-backdrop { position: static; background: none; display: block; padding: 0; }
+    .modal { max-height: none; box-shadow: none; }
+    table.results tr:hover td { background: transparent; }
+    table.results { page-break-inside: auto; }
+    table.results tr { page-break-inside: avoid; page-break-after: auto; }
+  }
+  @media (max-width: 900px) {
+    .filter-bar { grid-template-columns: 1fr 1fr; }
+    .chart-row { grid-template-columns: 1fr; }
+    .modal .body dl { grid-template-columns: 1fr; }
+    .modal .body dt { margin-top: 8px; }
+    .glossary-dl, .alleg-dl { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Texas SBEC Disciplinary Action Reports</h1>
+  <div class="sub">Public sanctions issued by the State Board for Educator Certification, 1993 — present. Source: Texas Education Agency.</div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="search" class="active">Search &amp; Browse</button>
+  <button data-tab="stats">Statistics</button>
+  <button data-tab="glossary">Glossary</button>
+  <span class="spacer"></span>
+  <span class="meta" id="dataset-meta"></span>
+</nav>
+
+<main>
+
+<section class="tab-panel active" id="tab-search">
+  <div class="filter-bar no-print">
+    <label class="wide">Name or text
+      <input id="f-q" type="search" placeholder="Search last or first name or district…" autocomplete="off">
+    </label>
+    <label>Sanction
+      <select id="f-sanction"></select>
+    </label>
+    <label>Period
+      <select id="f-period"></select>
+    </label>
+    <label>Year sanctioned
+      <select id="f-year"></select>
+    </label>
+    <label>Allegation code
+      <select id="f-allegation"></select>
+    </label>
+    <label>District
+      <select id="f-district"></select>
+      <small style="font-size:10px;color:var(--muted);">Published in FY 2025-26 reports only</small>
+    </label>
+    <label class="checkbox-filter">
+      <span>Repeat educators</span>
+      <span class="checkbox-row">
+        <input id="f-multi" type="checkbox">
+        <span>Only show people with 2+ records</span>
+      </span>
+    </label>
+  </div>
+
+  <div class="toolbar no-print">
+    <span class="count">Showing <b id="shown-count">0</b> of <b id="total-count">0</b> records</span>
+    <span class="spacer"></span>
+    <button class="btn" id="btn-reset">Reset filters</button>
+    <button class="btn" id="btn-csv">Export CSV</button>
+    <button class="btn primary" id="btn-print">Print results</button>
+  </div>
+
+  <table class="results">
+    <thead>
+      <tr>
+        <th class="tool-col" title='Deep search — full context (name + district + year + allegation keywords), excludes tea.texas.gov'>D</th>
+        <th class="tool-col" title='Name + Teacher — exact-name match, excludes tea.texas.gov'>T</th>
+        <th class="tool-col" title='TEA records — exact-name match restricted to tea.texas.gov'>★</th>
+        <th class="tool-col" title='TEA Certificate lookup — opens TEA registry result in a chrome-less popup window'>C</th>
+        <th class="expand-col"></th>
+        <th data-sort="l">Last name <span class="arrow"></span></th>
+        <th data-sort="f">First name <span class="arrow"></span></th>
+        <th data-sort="s">Sanction <span class="arrow"></span></th>
+        <th data-sort="d" class="sorted">Date <span class="arrow">▼</span></th>
+        <th data-sort="ds">District</th>
+        <th data-sort="a">Allegation</th>
+        <th data-sort="p">Period</th>
+      </tr>
+    </thead>
+    <tbody id="results-body"></tbody>
+  </table>
+
+  <div class="pagination no-print">
+    <button id="page-first">« First</button>
+    <button id="page-prev">‹ Prev</button>
+    <span class="page-num">Page <b id="page-cur">1</b> of <b id="page-total">1</b></span>
+    <button id="page-next">Next ›</button>
+    <button id="page-last">Last »</button>
+    <select id="page-size" class="page-size-sel">
+      <option value="50">50 / page</option>
+      <option value="100" selected>100 / page</option>
+      <option value="250">250 / page</option>
+      <option value="500">500 / page</option>
+    </select>
+  </div>
+</section>
+
+<section class="tab-panel" id="tab-stats">
+  <div class="toolbar no-print">
+    <span class="count" id="stats-scope">Statistics for full dataset</span>
+    <span class="spacer"></span>
+    <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+      Period
+      <select id="stats-period" style="padding:5px;border:1px solid var(--border-strong);border-radius:4px;">
+        <option value="">All periods</option>
+      </select>
+    </label>
+    <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+      District
+      <select id="stats-district" style="padding:5px;border:1px solid var(--border-strong);border-radius:4px;min-width:160px;">
+        <option value="">All districts</option>
+      </select>
+    </label>
+    <button class="btn primary" id="btn-print-stats">Print page</button>
+  </div>
+
+  <div class="stat-grid" id="stat-cards"></div>
+
+  <div class="chart-row full">
+    <div class="chart-card">
+      <h3>Sanctions per year (calendar)</h3>
+      <svg class="chart" id="chart-year" viewBox="0 0 800 280" preserveAspectRatio="none"></svg>
+      <div class="note">Counts include reinstatements and may include duplicate appearances of the same educator if multiple actions were taken.</div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3>By sanction type</h3>
+      <svg class="chart" id="chart-sanction" viewBox="0 0 460 360" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="chart-card">
+      <h3>By allegation code (where available)</h3>
+      <svg class="chart" id="chart-allegation" viewBox="0 0 460 360" preserveAspectRatio="none"></svg>
+      <div class="note">Allegation codes are published in FY 2025-2026 reports onwards.</div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3 id="top-districts-heading">Top school districts (FY 2025-2026)</h3>
+      <div class="top-list" id="top-districts"></div>
+      <div class="note">Districts named in published reports for the current reporting cycle. School-district information appears in FY 2025-2026 reports onwards. Select a district above to drill into its sanction mix.</div>
+    </div>
+    <div class="chart-card">
+      <h3>Permanent vs reversible actions</h3>
+      <svg class="chart" id="chart-pie" viewBox="0 0 460 360" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="legend" id="pie-legend"></div>
+    </div>
+  </div>
+
+  <details class="disclaimer">
+    <summary>About this data</summary>
+    <p>Compiled from publicly available SBEC Disciplinary Action Report PDFs published by the Texas Education Agency at <code>tea.texas.gov</code>. Each row represents one sanction action; an educator may appear more than once (e.g., a suspension followed by a later reinstatement). Allegation codes and school-district information are only published in FY 2025-2026 reports onwards.</p>
+    <p>The brief explanations of <em>allegation codes</em> shown in this app are best-effort inferences from the code abbreviations; refer to the official TEA documentation for definitive descriptions.</p>
+  </details>
+</section>
+
+<section class="tab-panel" id="tab-glossary">
+  <div class="chart-card">
+    <h3>Sanction definitions</h3>
+    <dl class="glossary-dl" id="glossary-list"></dl>
+  </div>
+  <div style="height:14px"></div>
+  <div class="chart-card">
+    <h3>Allegation codes</h3>
+    <dl class="alleg-dl" id="alleg-list"></dl>
+    <div class="note">Inferred from common TEA terminology. See the official TEA disciplinary action reports for authoritative descriptions.</div>
+  </div>
+</section>
+
+</main>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true">
+    <header class="modal-head">
+      <div>
+        <h2 id="modal-title">Record details</h2>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;" id="modal-subtitle"></div>
+      </div>
+      <button class="close" id="modal-close" aria-label="Close">×</button>
+    </header>
+    <div class="body">
+      <dl id="modal-body"></dl>
+      <div class="glossary-note" id="modal-glossary"></div>
+    </div>
+    <div class="actions no-print">
+      <button class="btn" id="modal-print-close">Close</button>
+      <button class="btn primary" id="modal-print">Print this record</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*__DATA_PAYLOAD__*/;
+
+const GLOSSARY = {
+  "Administrative Penalty": "Monetary penalty imposed by the SBEC against a superintendent, director, or principal for failure to report misconduct as required by 19 TAC §249.14(c). [19 TAC §249.15(a)(6)]",
+  "Cancelled": "A credential issued in error and invalidated by determination of the Texas Education Agency staff or the board.",
+  "Cancelled for Misconduct": "Certificate cancelled and invalidated based on satisfactory evidence of a violation of SBEC rules.",
+  "Certificate Denied": "A teaching credential not issued because the requestor was determined to be ineligible (non-completion of requirements or administrative denial per 19 TAC §249.12).",
+  "Indefinite Suspension": "Per TEC §22A.203, an educator's certificate is suspended following an arrest for certain specified offenses; the suspension remains in effect until final resolution of the related criminal matter and completion of a required SBEC hearing.",
+  "Inscribed Reprimand": "A formal censure inscribed on the educator's certificate; it does not affect the validity of the certificate.",
+  "Permanent Revocation": "Certificate rendered permanently invalid without the opportunity to reapply for a new certificate.",
+  "Permanent Surrender": "Voluntary relinquishment of a certificate in lieu of disciplinary proceedings, rendering the certificate permanently invalid without the opportunity to reapply.",
+  "Probated Suspension": "A suspension that is not enforced as long as the conditions of probation are met. The certificate remains valid during the probation period.",
+  "Reinstated": "The certificate has been restored to valid status after a prior suspension.",
+  "Relinquished": "The educator has voluntarily removed the certificate per 19 TAC §230.107; it cannot be renewed or reinstated.",
+  "Reprimand": "Formal, published censure by the Board on the face of the educator's certificate. Does not affect certificate validity.",
+  "Restriction": "Limitations on the use of a certificate imposed by SBEC order.",
+  "Revocation": "Certificate rendered invalid as a result of disciplinary action by the SBEC.",
+  "Suspension": "Certificate rendered invalid for a specific period of time, or until reinstated by the board, as a result of disciplinary action.",
+  "Voluntary Surrender": "Voluntary relinquishment of a certificate in lieu of disciplinary proceedings, rendering the certificate invalid."
+};
+
+const ALLEGATIONS = {
+  "1.1-SXIS":   "Sexual misconduct — In-school (with a student).",
+  "1.2-SXNS":   "Sexual misconduct — Non-school.",
+  "2.1-VSCH":   "Violation of school standards / Educators' Code of Ethics — In-school.",
+  "2.2-VNS":    "Violation of school standards / Educators' Code of Ethics — Non-school.",
+  "3.1-DRIS":   "Drug or alcohol-related conduct — In-school.",
+  "3.2-DRNS":   "Drug or alcohol-related conduct — Non-school.",
+  "4-SEXHAR":   "Sexual harassment.",
+  "5-OFFMIS":   "Official misconduct (mishandling of duties, records, or official conduct).",
+  "6.1-FRIS":   "Fraud, theft, or financial misconduct — In-school.",
+  "6.2-FRNS":   "Fraud, theft, or financial misconduct — Non-school.",
+  "7-BURGL":    "Burglary or theft of property.",
+  "8.2-TFNS":   "Theft — Non-school.",
+  "10-IRWSM":   "Inappropriate relationship with a student or minor.",
+  "11-MISC":    "Miscellaneous misconduct (other category).",
+  "12.2-FTN":   "Failure to report / notify (mandated reporting failure).",
+  "CONTRACT":   "Contract abandonment.",
+  "Contract":   "Contract abandonment."
+};
+
+// Short Google-search keywords per allegation code. Deliberately a few
+// plain-English words — not the code, not the full description.
+const ALLEGATION_KEYWORDS = {
+  "1.1-SXIS": "sexual misconduct student",
+  "1.2-SXNS": "sexual misconduct",
+  "2.1-VSCH": "code of ethics violation",
+  "2.2-VNS":  "ethics violation",
+  "3.1-DRIS": "drug alcohol school",
+  "3.2-DRNS": "drug alcohol",
+  "4-SEXHAR": "sexual harassment",
+  "5-OFFMIS": "official misconduct",
+  "6.1-FRIS": "fraud school",
+  "6.2-FRNS": "fraud",
+  "7-BURGL":  "burglary theft",
+  "8.2-TFNS": "theft",
+  "10-IRWSM": "inappropriate relationship student",
+  "11-MISC":  "",
+  "12.2-FTN": "failure to report",
+  "CONTRACT": "contract abandonment",
+  "Contract": "contract abandonment"
+};
+
+const KEYS = DATA.keys;
+const ROWS = DATA.rows;
+const colIdx = {};
+KEYS.forEach((k, i) => colIdx[k] = i);
+function rec(r, k) { return r[colIdx[k]] || ""; }
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function el(tag, attrs, children) {
+  const e = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null) continue;
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k === "data") for (const [dk, dv] of Object.entries(v)) e.dataset[dk] = dv;
+    else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  if (children) appendChildren(e, children);
+  return e;
+}
+function svg(tag, attrs, children) {
+  const e = document.createElementNS(SVG_NS, tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null) continue;
+    if (k === "class") e.setAttribute("class", v);
+    else if (k === "text") e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  if (children) appendChildren(e, children);
+  return e;
+}
+function appendChildren(parent, children) {
+  if (!Array.isArray(children)) children = [children];
+  for (const c of children) {
+    if (c == null || c === false) continue;
+    if (Array.isArray(c)) appendChildren(parent, c);
+    else if (typeof c === "string" || typeof c === "number") parent.appendChild(document.createTextNode(String(c)));
+    else parent.appendChild(c);
+  }
+}
+function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+function uniqueSorted(extract) {
+  const s = new Set();
+  for (const r of ROWS) { const v = extract(r); if (v) s.add(v); }
+  return Array.from(s).sort();
+}
+function buildSelect(elt, values, placeholder) {
+  clear(elt);
+  elt.appendChild(el("option", { value: "", text: placeholder }));
+  for (const v of values) elt.appendChild(el("option", { value: v, text: v }));
+}
+
+const sanctions = uniqueSorted(r => rec(r,"s"));
+const periods = uniqueSorted(r => rec(r,"p"));
+const years = uniqueSorted(r => rec(r,"d").slice(0,4));
+years.reverse();
+const allegations = uniqueSorted(r => rec(r,"a"));
+const districts = uniqueSorted(r => {
+  const d = rec(r,"ds");
+  if (!d || d === "None Identified" || d === "N/A") return "";
+  return d;
+});
+buildSelect($("#f-sanction"), sanctions, "All sanctions");
+buildSelect($("#f-period"), periods, "All periods");
+buildSelect($("#f-year"), years, "All years");
+buildSelect($("#f-allegation"), allegations, "All codes");
+buildSelect($("#f-district"), districts, "All districts");
+buildSelect($("#stats-period"), periods, "All periods");
+buildSelect($("#stats-district"), districts, "All districts");
+
+const minDate = ROWS.reduce((a,r)=>rec(r,"d") && (a==null||rec(r,"d")<a)?rec(r,"d"):a, null);
+const maxDate = ROWS.reduce((a,r)=>rec(r,"d") && (a==null||rec(r,"d")>a)?rec(r,"d"):a, null);
+$("#dataset-meta").textContent = `${ROWS.length.toLocaleString()} sanction records · ${(minDate||"").slice(0,4)}–${(maxDate||"").slice(0,4)}`;
+$("#total-count").textContent = ROWS.length.toLocaleString();
+
+// Precompute, once, every educator's full record list. Educators with >1
+// record across the entire dataset get an expandable parent row in the table.
+function groupKey(r) {
+  return rec(r, "l").toLowerCase() + "|" + rec(r, "f").toLowerCase();
+}
+const EDUCATOR_RECORDS = new Map();  // key -> array of rows (sorted by date desc)
+for (const r of ROWS) {
+  const k = groupKey(r);
+  if (!EDUCATOR_RECORDS.has(k)) EDUCATOR_RECORDS.set(k, []);
+  EDUCATOR_RECORDS.get(k).push(r);
+}
+for (const arr of EDUCATOR_RECORDS.values()) {
+  arr.sort((a, b) => (rec(b,"d") || "").localeCompare(rec(a,"d") || ""));
+}
+
+function buildGoogleQuery(r) {
+  const first = rec(r, "f");
+  const last = rec(r, "l");
+  const district = rec(r, "ds");
+  const year = (rec(r, "d") || "").slice(0, 4);
+  const code = rec(r, "a");
+  const kw = (ALLEGATION_KEYWORDS[code] || "").trim();
+  const cleanDistrict = (district && district !== "None Identified" && district !== "N/A") ? district : "";
+  const parts = [first, last, "teacher", cleanDistrict, year, kw, "-site:tea.texas.gov"].filter(Boolean);
+  return "https://www.google.com/search?q=" + encodeURIComponent(parts.join(" "));
+}
+
+function buildTeacherQuery(r) {
+  // Exact-name match, +teacher, excludes the TEA site.
+  const first = rec(r, "f");
+  const last = rec(r, "l");
+  if (!first && !last) return "";
+  const q = `+"${(first + " " + last).trim()}" teacher -site:tea.texas.gov`;
+  return "https://www.google.com/search?q=" + encodeURIComponent(q);
+}
+
+function buildTeaQuery(r) {
+  // Exact-name match restricted to the TEA site.
+  const first = rec(r, "f");
+  const last = rec(r, "l");
+  if (!first && !last) return "";
+  const q = `+"${(first + " " + last).trim()}" site:tea.texas.gov`;
+  return "https://www.google.com/search?q=" + encodeURIComponent(q);
+}
+
+function svgIcon(kind) {
+  const s = document.createElementNS(SVG_NS, "svg");
+  s.setAttribute("width", "16"); s.setAttribute("height", "16");
+  if (kind === "google") {
+    s.setAttribute("viewBox", "0 0 48 48");
+    const paths = [
+      ["#4285F4","M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"],
+      ["#34A853","M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"],
+      ["#FBBC05","M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"],
+      ["#1A73E8","M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"],
+    ];
+    for (const [fill, d] of paths) {
+      const p = document.createElementNS(SVG_NS, "path");
+      p.setAttribute("fill", fill); p.setAttribute("d", d);
+      s.appendChild(p);
+    }
+  } else if (kind === "teacher") {
+    // Graduation cap (mortarboard) — green
+    s.setAttribute("viewBox", "0 0 24 24");
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("fill", "#2a8f3d");
+    p.setAttribute("d", "M12 3 1 9l11 6 9-4.909V17h2V9L12 3zm-7 9.18v4L12 19l7-2.82v-4L12 16l-7-3.82z");
+    s.appendChild(p);
+  } else if (kind === "tea") {
+    // Government / institutional building — red (Texas)
+    s.setAttribute("viewBox", "0 0 24 24");
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("fill", "#bf2727");
+    p.setAttribute("d", "M12 2 2 7v2h20V7L12 2zM4 10v8H2v2h20v-2h-2v-8h-2v8h-3v-8h-2v8h-2v-8H9v8H6v-8H4z");
+    s.appendChild(p);
+  } else if (kind === "cert") {
+    // Award ribbon / certificate seal — gold
+    s.setAttribute("viewBox", "0 0 24 24");
+    const seal = document.createElementNS(SVG_NS, "circle");
+    seal.setAttribute("cx", "12"); seal.setAttribute("cy", "9"); seal.setAttribute("r", "6");
+    seal.setAttribute("fill", "#d6a01a"); seal.setAttribute("stroke", "#8a6a0c"); seal.setAttribute("stroke-width", "1");
+    s.appendChild(seal);
+    const star = document.createElementNS(SVG_NS, "path");
+    star.setAttribute("fill", "#fff5c2");
+    star.setAttribute("d", "M12 5.4l1.2 2.4 2.6.4-1.9 1.85.45 2.6L12 11.4l-2.35 1.25.45-2.6L8.2 8.2l2.6-.4L12 5.4z");
+    s.appendChild(star);
+    const r1 = document.createElementNS(SVG_NS, "path");
+    r1.setAttribute("fill", "#bf2727");
+    r1.setAttribute("d", "M8.5 14 7 22l4-2 3.4 1.9L13 14z");
+    s.appendChild(r1);
+  }
+  return s;
+}
+
+function makeSearchBtn(opts) {
+  const btn = el("button", {
+    class: "search-btn",
+    title: opts.tooltip,
+    type: "button",
+    "aria-label": opts.tooltip,
+  });
+  btn.appendChild(svgIcon(opts.icon));
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (opts.action) {
+      opts.action();
+    } else if (opts.urlFor) {
+      const url = opts.urlFor();
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
+    }
+  });
+  return btn;
+}
+
+function splitFirstMiddle(fullFirst) {
+  // SBEC publishes the entire given-name string in the "first name" column,
+  // e.g. "Kristy Nicole". TEA's certificate form has separate First/Middle
+  // fields, so we split: first whitespace token = First, the rest = Middle.
+  const tokens = (fullFirst || "").trim().split(/\s+/).filter(Boolean);
+  if (tokens.length <= 1) return { first: tokens[0] || "", middle: "" };
+  return { first: tokens[0], middle: tokens.slice(1).join(" ") };
+}
+
+function openTeaCertWindow(r) {
+  const fullFirst = (rec(r, "f") || "").trim();
+  const last = (rec(r, "l") || "").trim();
+  if (!fullFirst && !last) return;
+  const { first, middle } = splitFirstMiddle(fullFirst);
+  // Request a chrome-less popup. Modern browsers ignore some hints
+  // (especially the address bar in Chrome), but most still hide
+  // bookmarks/extensions/menu when these features are passed.
+  const features = [
+    "popup=yes",
+    "width=940",
+    "height=720",
+    "toolbar=no",
+    "menubar=no",
+    "location=no",
+    "status=no",
+    "scrollbars=yes",
+    "resizable=yes",
+  ].join(",");
+  const win = window.open("", "tea_cert_" + Date.now(), features);
+  if (!win) {
+    alert("Pop-up blocked. Please allow pop-ups for this page to view the TEA certificate.");
+    return;
+  }
+  const TEA_URL = "https://tealprod.tea.state.tx.us/ECOS-External/EcosOnline/VirtCert";
+  const wd = win.document;
+  wd.title = `TEA Certificate — ${fullFirst} ${last}`;
+  // Style: small spinner + loading text while TEA loads.
+  const style = wd.createElement("style");
+  style.textContent =
+    'html,body{margin:0;padding:0;height:100%;background:#f6f7fb;' +
+    'font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:#1a1f2e;}' +
+    '.loading{display:flex;align-items:center;justify-content:center;height:100vh;color:#5a6478;}' +
+    '.spinner{width:16px;height:16px;border:2px solid #d8dde6;border-top-color:#1f4ea1;border-radius:50%;' +
+    'animation:spin 0.7s linear infinite;margin-right:10px;}' +
+    '@keyframes spin{to{transform:rotate(360deg);}}';
+  wd.head.appendChild(style);
+  const loadingWrap = wd.createElement("div");
+  loadingWrap.className = "loading";
+  const spinner = wd.createElement("div");
+  spinner.className = "spinner";
+  loadingWrap.appendChild(spinner);
+  loadingWrap.appendChild(wd.createTextNode(`Loading TEA certificate record for ${fullFirst} ${last}…`));
+  wd.body.appendChild(loadingWrap);
+  // Build a hidden form that POSTs to TEA, then submit it. The response
+  // (TEA's results page or "no record found") renders inside this popup.
+  const form = wd.createElement("form");
+  form.method = "POST";
+  form.action = TEA_URL;
+  form.style.display = "none";
+  const addInput = (name, value) => {
+    const i = wd.createElement("input");
+    i.type = "hidden"; i.name = name; i.value = value;
+    form.appendChild(i);
+  };
+  addInput("LastName", last);
+  addInput("FirstName", first);
+  addInput("MiddleName", middle);
+  addInput("btnSearch", "Search");
+  wd.body.appendChild(form);
+  win.focus();
+  // Submit on next tick so the loading UI paints first.
+  win.setTimeout(() => form.submit(), 0);
+}
+
+function makeTeaCertButton(r) {
+  return makeSearchBtn({
+    icon: "cert",
+    tooltip: 'TEA Certificate lookup — opens a popup window that submits the educator\'s name to TEA\'s official certificate registry.',
+    action: () => openTeaCertWindow(r),
+  });
+}
+
+function makeSearchButton(r) {
+  return makeSearchBtn({
+    icon: "google",
+    tooltip: "Deep search — Google search with name, district, year, and allegation keywords; excludes tea.texas.gov.",
+    urlFor: () => buildGoogleQuery(r),
+  });
+}
+
+function makeTeacherSearchButton(r) {
+  return makeSearchBtn({
+    icon: "teacher",
+    tooltip: 'Name + Teacher search — exact-match search for "First Last" + teacher (Google, excludes tea.texas.gov).',
+    urlFor: () => buildTeacherQuery(r),
+  });
+}
+
+function makeTeaSearchButton(r) {
+  return makeSearchBtn({
+    icon: "tea",
+    tooltip: 'TEA records search — exact-match search for "First Last" restricted to tea.texas.gov.',
+    urlFor: () => buildTeaQuery(r),
+  });
+}
+
+function appendSearchCells(tr, r) {
+  const td1 = el("td", { class: "tool-col" }); td1.appendChild(makeSearchButton(r));        tr.appendChild(td1);
+  const td2 = el("td", { class: "tool-col" }); td2.appendChild(makeTeacherSearchButton(r)); tr.appendChild(td2);
+  const td3 = el("td", { class: "tool-col" }); td3.appendChild(makeTeaSearchButton(r));    tr.appendChild(td3);
+  const td4 = el("td", { class: "tool-col" }); td4.appendChild(makeTeaCertButton(r));      tr.appendChild(td4);
+}
+
+function activateTab(name) {
+  $$('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  $$('section.tab-panel').forEach(s => s.classList.toggle('active', s.id === 'tab-' + name));
+  if (name === 'stats') renderStats();
+  if (name === 'glossary') renderGlossary();
+}
+$$('nav.tabs button').forEach(b => b.addEventListener('click', () => activateTab(b.dataset.tab)));
+
+const state = {
+  filters: { q: "", sanction: "", period: "", year: "", allegation: "", district: "", multi: false },
+  sort: { key: "d", dir: -1 },
+  page: 1,
+  pageSize: 100,
+  filtered: ROWS.slice(),
+};
+
+function applyFilters() {
+  const q = state.filters.q.trim().toLowerCase();
+  const san = state.filters.sanction;
+  const per = state.filters.period;
+  const yr = state.filters.year;
+  const all = state.filters.allegation;
+  const dist = state.filters.district;
+  const multiOnly = state.filters.multi;
+  state.filtered = ROWS.filter(r => {
+    if (san && rec(r,"s") !== san) return false;
+    if (per && rec(r,"p") !== per) return false;
+    if (yr && rec(r,"d").slice(0,4) !== yr) return false;
+    if (all && rec(r,"a") !== all) return false;
+    if (dist && rec(r,"ds") !== dist) return false;
+    if (multiOnly && (EDUCATOR_RECORDS.get(groupKey(r))?.length || 1) < 2) return false;
+    if (q) {
+      const hay = (rec(r,"l") + " " + rec(r,"f") + " " + rec(r,"ds")).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  applySort();
+  state.page = 1;
+  renderTable();
+}
+
+function applySort() {
+  const { key, dir } = state.sort;
+  state.filtered.sort((a, b) => {
+    const av = rec(a, key), bv = rec(b, key);
+    if (av < bv) return -1 * dir;
+    if (av > bv) return  1 * dir;
+    const aln = rec(a, "l").toLowerCase();
+    const bln = rec(b, "l").toLowerCase();
+    if (aln < bln) return -1;
+    if (aln > bln) return 1;
+    return 0;
+  });
+}
+
+function formatDate(iso) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split('-');
+  return `${m}/${d}/${y}`;
+}
+
+function makeSanctionBadge(s) {
+  const cls = "sanction-badge sb-" + s.replace(/\s+/g, "-");
+  return el("span", { class: cls, text: s });
+}
+
+// Build the visible row sequence after applying filters & sort. Each entry
+// is either a singleton record or a parent (educator with multiple records,
+// children = all their records across the dataset).
+function buildVisibleGroups() {
+  const seen = new Map();
+  const groups = [];
+  for (const r of state.filtered) {
+    const k = groupKey(r);
+    if (seen.has(k)) {
+      seen.get(k).matched.push(r);
+      continue;
+    }
+    const allRecs = EDUCATOR_RECORDS.get(k) || [r];
+    const g = {
+      key: k,
+      lead: r,                   // the first matching record (drives parent row display)
+      matched: [r],              // matching records in filter (for the badge count)
+      all: allRecs,              // every record for this educator (used when expanded)
+    };
+    seen.set(k, g);
+    groups.push(g);
+  }
+  return groups;
+}
+
+function renderTable() {
+  const groups = buildVisibleGroups();
+  const start = (state.page - 1) * state.pageSize;
+  const slice = groups.slice(start, start + state.pageSize);
+  const tbody = $("#results-body");
+  clear(tbody);
+  if (slice.length === 0) {
+    const tr = el("tr", { class: "empty" });
+    const td = el("td", { colspan: 12, text: "No matching records." });
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  } else {
+    for (const g of slice) {
+      const r = g.lead;
+      const idx = ROWS.indexOf(r);
+      const hasMulti = g.all.length > 1;
+      const tr = el("tr", { data: { idx: String(idx), key: g.key }, class: hasMulti ? "has-children" : "" });
+
+      // Three search-button columns
+      appendSearchCells(tr, r);
+
+      // Expand toggle column (only if educator has multiple records)
+      const tdExpand = el("td", { class: "expand-col" });
+      if (hasMulti) {
+        const btn = el("button", { class: "expand-btn", title: `Show all ${g.all.length} records for this educator`, "aria-expanded": "false" });
+        btn.textContent = "▶";
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleChildren(tr, g, btn);
+        });
+        tdExpand.appendChild(btn);
+      }
+      tr.appendChild(tdExpand);
+
+      // Last name (with optional record-count badge)
+      const tdLast = el("td");
+      tdLast.appendChild(document.createTextNode(rec(r,"l")));
+      if (hasMulti) {
+        tdLast.appendChild(el("span", { class: "record-badge", text: `${g.all.length} records` }));
+      }
+      tr.appendChild(tdLast);
+
+      tr.appendChild(el("td", { text: rec(r,"f") }));
+      const tdSanction = el("td");
+      tdSanction.appendChild(makeSanctionBadge(rec(r,"s")));
+      tr.appendChild(tdSanction);
+      tr.appendChild(el("td", { text: formatDate(rec(r,"d")) }));
+      tr.appendChild(el("td", { text: rec(r,"ds") }));
+      tr.appendChild(el("td", { text: rec(r,"a") }));
+      tr.appendChild(el("td", { text: rec(r,"p") }));
+      tbody.appendChild(tr);
+    }
+  }
+  // Counter shows both groups and records.
+  const totalRecords = state.filtered.length;
+  const totalGroups = groups.length;
+  const showCount = totalGroups === totalRecords
+    ? totalRecords.toLocaleString()
+    : `${totalGroups.toLocaleString()} educators · ${totalRecords.toLocaleString()} records`;
+  $("#shown-count").textContent = showCount;
+  const total = Math.max(1, Math.ceil(totalGroups / state.pageSize));
+  $("#page-cur").textContent = state.page;
+  $("#page-total").textContent = total;
+  $("#page-first").disabled = state.page <= 1;
+  $("#page-prev").disabled = state.page <= 1;
+  $("#page-next").disabled = state.page >= total;
+  $("#page-last").disabled = state.page >= total;
+
+  $$('table.results th[data-sort]').forEach(th => {
+    const isSorted = th.dataset.sort === state.sort.key;
+    th.classList.toggle('sorted', isSorted);
+    const arrow = th.querySelector('.arrow');
+    if (arrow) arrow.textContent = isSorted ? (state.sort.dir === 1 ? '▲' : '▼') : '';
+  });
+}
+
+function toggleChildren(parentTr, g, btn) {
+  const opening = btn.getAttribute("aria-expanded") !== "true";
+  if (!opening) {
+    // Collapse: remove sibling rows tagged with this key and restore the
+    // parent row to its lead-record display.
+    let next = parentTr.nextSibling;
+    while (next && next.nodeType === 1 && next.classList.contains("child-row") && next.dataset.parentKey === g.key) {
+      const toRemove = next;
+      next = next.nextSibling;
+      toRemove.remove();
+    }
+    btn.textContent = "▶";
+    btn.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
+    parentTr.classList.remove("expanded");
+    fillParentCells(parentTr, g, /*expanded*/false);
+    return;
+  }
+  btn.textContent = "▶";
+  btn.classList.add("open");
+  btn.setAttribute("aria-expanded", "true");
+  parentTr.classList.add("expanded");
+  fillParentCells(parentTr, g, /*expanded*/true);
+
+  // Insert one row per record (every one — including the lead), sorted by
+  // date desc.
+  let anchor = parentTr;
+  for (const r of g.all) {
+    const idx = ROWS.indexOf(r);
+    const tr = el("tr", { class: "child-row", data: { idx: String(idx), parentKey: g.key } });
+    appendSearchCells(tr, r);
+    tr.appendChild(el("td", { class: "expand-col" }));
+    tr.appendChild(el("td", { class: "first-cell", text: "↳ " + rec(r,"l") }));
+    tr.appendChild(el("td", { text: rec(r,"f") }));
+    const tdSanction = el("td");
+    tdSanction.appendChild(makeSanctionBadge(rec(r,"s")));
+    tr.appendChild(tdSanction);
+    tr.appendChild(el("td", { text: formatDate(rec(r,"d")) }));
+    tr.appendChild(el("td", { text: rec(r,"ds") }));
+    tr.appendChild(el("td", { text: rec(r,"a") }));
+    tr.appendChild(el("td", { text: rec(r,"p") }));
+    anchor.parentNode.insertBefore(tr, anchor.nextSibling);
+    anchor = tr;
+  }
+}
+
+// Render the parent row's per-record cells. When `expanded`, the per-record
+// fields are blanked (children carry that data) so the parent reads cleanly
+// as a summary header: "Last, First — N records".
+function fillParentCells(tr, g, expanded) {
+  const r = g.lead;
+  // Layout: [deepSearch, teacherSearch, teaSearch, teaCert, expand, last, first, sanction, date, district, allegation, period]
+  const cellLast = tr.children[5];
+  const cellFirst = tr.children[6];
+  const cellSanction = tr.children[7];
+  const cellDate = tr.children[8];
+  const cellDistrict = tr.children[9];
+  const cellAllegation = tr.children[10];
+  const cellPeriod = tr.children[11];
+
+  clear(cellLast);
+  cellLast.appendChild(document.createTextNode(rec(r,"l")));
+  cellLast.appendChild(el("span", { class: "record-badge", text: `${g.all.length} records` }));
+
+  if (expanded) {
+    // Show the educator's first name (consistent identifier) but blank the
+    // record-specific columns since the children are the source of truth.
+    cellFirst.textContent = rec(r,"f");
+    clear(cellSanction);
+    cellSanction.appendChild(el("span", { class: "summary-detail", text: `latest: ${formatDate(rec(r,"d"))}` }));
+    cellDate.textContent = "";
+    cellDistrict.textContent = "";
+    cellAllegation.textContent = "";
+    cellPeriod.textContent = "";
+  } else {
+    cellFirst.textContent = rec(r,"f");
+    clear(cellSanction);
+    cellSanction.appendChild(makeSanctionBadge(rec(r,"s")));
+    cellDate.textContent = formatDate(rec(r,"d"));
+    cellDistrict.textContent = rec(r,"ds");
+    cellAllegation.textContent = rec(r,"a");
+    cellPeriod.textContent = rec(r,"p");
+  }
+}
+
+$("#f-q").addEventListener('input', e => { state.filters.q = e.target.value; applyFilters(); });
+$("#f-sanction").addEventListener('change', e => { state.filters.sanction = e.target.value; applyFilters(); });
+$("#f-period").addEventListener('change', e => { state.filters.period = e.target.value; applyFilters(); });
+$("#f-year").addEventListener('change', e => { state.filters.year = e.target.value; applyFilters(); });
+$("#f-allegation").addEventListener('change', e => { state.filters.allegation = e.target.value; applyFilters(); });
+$("#f-district").addEventListener('change', e => { state.filters.district = e.target.value; applyFilters(); });
+$("#f-multi").addEventListener('change', e => { state.filters.multi = e.target.checked; applyFilters(); });
+$("#btn-reset").addEventListener('click', () => {
+  state.filters = { q:"", sanction:"", period:"", year:"", allegation:"", district:"", multi:false };
+  $("#f-q").value = "";
+  $("#f-sanction").value = "";
+  $("#f-period").value = "";
+  $("#f-year").value = "";
+  $("#f-allegation").value = "";
+  $("#f-district").value = "";
+  $("#f-multi").checked = false;
+  applyFilters();
+});
+
+$$('table.results th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (state.sort.key === k) state.sort.dir *= -1;
+    else { state.sort.key = k; state.sort.dir = (k === "d" ? -1 : 1); }
+    applySort();
+    renderTable();
+  });
+});
+
+$("#page-first").addEventListener('click', () => { state.page = 1; renderTable(); });
+$("#page-prev").addEventListener('click', () => { state.page = Math.max(1, state.page-1); renderTable(); });
+$("#page-next").addEventListener('click', () => { state.page = state.page + 1; renderTable(); });
+$("#page-last").addEventListener('click', () => { state.page = Math.ceil(state.filtered.length / state.pageSize); renderTable(); });
+$("#page-size").addEventListener('change', e => {
+  state.pageSize = parseInt(e.target.value, 10);
+  state.page = 1;
+  renderTable();
+});
+
+$("#results-body").addEventListener('click', e => {
+  const tr = e.target.closest('tr[data-idx]');
+  if (!tr) return;
+  if (tr.classList.contains("has-children")) {
+    // Clicking elsewhere on a parent row toggles its expand state.
+    const btn = tr.querySelector("button.expand-btn");
+    if (btn) btn.click();
+    return;
+  }
+  openDetail(parseInt(tr.dataset.idx, 10));
+});
+
+function openDetail(idx) {
+  const r = ROWS[idx];
+  if (!r) return;
+  const last = rec(r,"l"), first = rec(r,"f"), s = rec(r,"s");
+  $("#modal-title").textContent = `${last}, ${first}`;
+  $("#modal-subtitle").textContent = `${s} — ${formatDate(rec(r,"d"))}`;
+  const dl = $("#modal-body");
+  clear(dl);
+  const fields = [
+    ["Last name", rec(r,"l")],
+    ["First name", rec(r,"f")],
+    ["Sanction (canonical)", "BADGE"],
+    ["Sanction (as published)", rec(r,"sr")],
+    ["Date sanctioned", formatDate(rec(r,"d"))],
+    ["Sanction end date", formatDate(rec(r,"e")) || rec(r,"er")],
+    ["Reporting period", rec(r,"p")],
+    ["Allegation code", rec(r,"a") ? `${rec(r,"a")} — ${ALLEGATIONS[rec(r,"a")] || "(no description)"}` : ""],
+    ["School district / charter", rec(r,"ds")],
+    ["Do Not Hire registry status", rec(r,"dh")],
+    ["Source PDF", rec(r,"src")],
+  ];
+  for (const [k, v] of fields) {
+    if (!v) continue;
+    dl.appendChild(el("dt", { text: k }));
+    const dd = el("dd");
+    if (v === "BADGE") dd.appendChild(makeSanctionBadge(s));
+    else dd.textContent = v;
+    dl.appendChild(dd);
+  }
+  const gloss = GLOSSARY[s];
+  const note = $("#modal-glossary");
+  clear(note);
+  if (gloss) {
+    note.appendChild(el("div", { class: "label", text: `About "${s}"` }));
+    note.appendChild(document.createTextNode(gloss));
+    note.style.display = "";
+  } else {
+    note.style.display = "none";
+  }
+  $("#modal-backdrop").classList.add("open");
+}
+function closeDetail() { $("#modal-backdrop").classList.remove("open"); }
+$("#modal-close").addEventListener('click', closeDetail);
+$("#modal-print-close").addEventListener('click', closeDetail);
+$("#modal-backdrop").addEventListener('click', e => { if (e.target.id === 'modal-backdrop') closeDetail(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+$("#modal-print").addEventListener('click', () => window.print());
+
+$("#btn-print").addEventListener('click', () => window.print());
+$("#btn-print-stats").addEventListener('click', () => window.print());
+$("#btn-csv").addEventListener('click', exportCsv);
+
+function exportCsv() {
+  const cols = [
+    ["Last Name","l"], ["First Name","f"], ["Sanction","s"], ["Sanction (raw)","sr"],
+    ["Date","d"], ["End Date","e"], ["Period","p"], ["Allegation","a"],
+    ["District","ds"], ["Do Not Hire","dh"], ["Source","src"]
+  ];
+  let csv = cols.map(c => c[0]).join(",") + "\n";
+  for (const r of state.filtered) csv += cols.map(c => csvEscape(rec(r, c[1]))).join(",") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: "sbec-disciplinary-actions.csv" });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function csvEscape(v) {
+  v = (v == null ? "" : String(v));
+  if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+  return v;
+}
+
+function renderGlossary() {
+  const dl = $("#glossary-list");
+  clear(dl);
+  for (const [k, v] of Object.entries(GLOSSARY)) {
+    dl.appendChild(el("dt", { text: k }));
+    dl.appendChild(el("dd", { text: v }));
+  }
+  const a = $("#alleg-list");
+  clear(a);
+  for (const [k, v] of Object.entries(ALLEGATIONS)) {
+    if (k === "Contract") continue;
+    a.appendChild(el("dt", { text: k }));
+    a.appendChild(el("dd", { text: v }));
+  }
+}
+
+function renderStats() {
+  const period = $("#stats-period").value;
+  const district = $("#stats-district").value;
+  let subset = ROWS;
+  if (period) subset = subset.filter(r => rec(r,"p") === period);
+  if (district) subset = subset.filter(r => rec(r,"ds") === district);
+
+  const scope = $("#stats-scope");
+  clear(scope);
+  const scopeBits = [];
+  if (district) scopeBits.push(district);
+  if (period) scopeBits.push(period);
+  scope.appendChild(document.createTextNode("Statistics for "));
+  scope.appendChild(el("b", { text: scopeBits.length ? scopeBits.join(" · ") : "full dataset" }));
+  scope.appendChild(document.createTextNode(` (${subset.length.toLocaleString()} records)`));
+
+  const distinctNames = new Set(subset.map(r => `${rec(r,"l").toLowerCase()}|${rec(r,"f").toLowerCase()}`)).size;
+  const minD = subset.reduce((a,r)=>rec(r,"d") && (a==null||rec(r,"d")<a)?rec(r,"d"):a, null);
+  const maxD = subset.reduce((a,r)=>rec(r,"d") && (a==null||rec(r,"d")>a)?rec(r,"d"):a, null);
+  const sanctionCounts = countBy(subset, r => rec(r,"s"));
+  const permTypes = new Set(["Permanent Revocation","Permanent Surrender","Revocation"]);
+  const permCount = subset.filter(r => permTypes.has(rec(r,"s"))).length;
+
+  // District-aware KPI: total reporting districts in the subset, or the
+  // top district overall when no district filter is active.
+  const districtCounts = countBy(subset, r => {
+    const d = rec(r,"ds");
+    return (d && d !== "None Identified" && d !== "N/A") ? d : "";
+  });
+  const namedDistricts = districtCounts.size;
+  const districtCard = district
+    ? ["Records for this district", subset.length.toLocaleString()]
+    : namedDistricts > 0
+      ? ["Districts named", namedDistricts.toLocaleString()]
+      : ["Districts named", "—"];
+
+  const cards = [
+    ["Total actions", subset.length.toLocaleString()],
+    ["Distinct educators (approx)", distinctNames.toLocaleString()],
+    ["Date range", minD && maxD ? `${minD.slice(0,4)}–${maxD.slice(0,4)}` : "—"],
+    ["Permanent actions", `${permCount.toLocaleString()} (${pct(permCount, subset.length)})`],
+    ["Most common sanction", topKey(sanctionCounts) || "—"],
+    districtCard,
+  ];
+  const cardWrap = $("#stat-cards");
+  clear(cardWrap);
+  for (const [k, v] of cards) {
+    cardWrap.appendChild(el("div", { class: "stat-card" }, [
+      el("div", { class: "v", text: v }),
+      el("div", { class: "k", text: k }),
+    ]));
+  }
+
+  drawYearChart(subset);
+  drawHorizontalBar("#chart-sanction", sanctionBarData(subset), k => GLOSSARY[k]);
+  drawHorizontalBar("#chart-allegation", allegationBarData(subset), k => ALLEGATIONS[k]);
+  drawTopDistricts(subset, district);
+  drawPie(subset);
+  // Update the top-districts heading depending on filter state.
+  const topHdr = $("#top-districts-heading");
+  if (topHdr) topHdr.textContent = district
+    ? `Sanction mix for ${district}`
+    : "Top school districts (FY 2025-2026)";
+}
+$("#stats-period").addEventListener('change', renderStats);
+$("#stats-district").addEventListener('change', renderStats);
+
+function countBy(arr, fn) {
+  const m = new Map();
+  for (const x of arr) {
+    const k = fn(x);
+    if (!k) continue;
+    m.set(k, (m.get(k) || 0) + 1);
+  }
+  return m;
+}
+function pct(n, t) { return t ? (100 * n / t).toFixed(1) + "%" : "0%"; }
+function topKey(m) {
+  let best = null, bestN = -1;
+  for (const [k, v] of m) if (v > bestN) { best = k; bestN = v; }
+  return best;
+}
+
+function sanctionBarData(subset) {
+  const m = countBy(subset, r => rec(r,"s"));
+  return Array.from(m.entries()).sort((a,b) => b[1] - a[1]);
+}
+function allegationBarData(subset) {
+  const m = countBy(subset, r => rec(r,"a"));
+  return Array.from(m.entries()).sort((a,b) => b[1] - a[1]);
+}
+
+function niceTicks(maxV, count) {
+  const rough = maxV / count;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / mag;
+  let step;
+  if (norm <= 1) step = 1;
+  else if (norm <= 2) step = 2;
+  else if (norm <= 5) step = 5;
+  else step = 10;
+  step *= mag;
+  const max = Math.ceil(maxV / step) * step;
+  const ticks = [];
+  for (let v = 0; v <= max; v += step) ticks.push(v);
+  return ticks;
+}
+
+function drawYearChart(subset) {
+  const m = countBy(subset, r => rec(r,"d").slice(0,4));
+  const data = Array.from(m.entries()).sort((a,b)=>a[0].localeCompare(b[0]));
+  const root = $("#chart-year");
+  clear(root);
+  const W = 800, H = 280;
+  const pad = { l: 38, r: 14, t: 14, b: 26 };
+  const innerW = W - pad.l - pad.r;
+  const innerH = H - pad.t - pad.b;
+  if (data.length === 0) {
+    root.appendChild(svg("text", { x: W/2, y: H/2, "text-anchor": "middle", fill: "#5a6478", "font-size": 13, text: "No data" }));
+    return;
+  }
+  const maxV = Math.max(1, ...data.map(d => d[1]));
+  const ticks = niceTicks(maxV, 5);
+  const yMax = ticks[ticks.length - 1];
+  const step = innerW / data.length;
+  const bw = step * 0.78;
+
+  const gridG = svg("g", { class: "grid" });
+  for (const t of ticks) {
+    const y = pad.t + innerH - (t / yMax) * innerH;
+    gridG.appendChild(svg("line", { x1: pad.l, y1: y, x2: W - pad.r, y2: y }));
+  }
+  root.appendChild(gridG);
+
+  const axisG = svg("g", { class: "axis" });
+  for (const t of ticks) {
+    const y = pad.t + innerH - (t / yMax) * innerH;
+    axisG.appendChild(svg("text", { x: pad.l - 4, y: y + 3, "text-anchor": "end", text: t.toLocaleString() }));
+  }
+  root.appendChild(axisG);
+
+  data.forEach(([yr, n], i) => {
+    const x = pad.l + i * step + (step - bw) / 2;
+    const h = (n / yMax) * innerH;
+    const y = pad.t + innerH - h;
+    const r = svg("rect", { class: "bar", x, y, width: bw, height: h });
+    r.appendChild(svg("title", { text: `${yr}: ${n.toLocaleString()}` }));
+    root.appendChild(r);
+  });
+
+  const labelEvery = Math.ceil(data.length / 16);
+  const xAxis = svg("g", { class: "axis" });
+  data.forEach(([yr], i) => {
+    if (i % labelEvery !== 0 && i !== data.length - 1) return;
+    const x = pad.l + i * step + step / 2;
+    xAxis.appendChild(svg("text", { x, y: H - pad.b + 14, "text-anchor": "middle", text: yr }));
+  });
+  root.appendChild(xAxis);
+}
+
+function drawHorizontalBar(sel, data, descFn) {
+  const root = $(sel);
+  clear(root);
+  const W = 460;
+  const pad = { l: 170, r: 50, t: 8, b: 10 };
+  if (data.length === 0) {
+    root.setAttribute('viewBox', `0 0 ${W} 200`);
+    root.appendChild(svg("text", { x: W/2, y: 100, "text-anchor": "middle", fill: "#5a6478", "font-size": 13, text: "No data" }));
+    return;
+  }
+  const rowH = 26;
+  const innerH = data.length * rowH;
+  const H = pad.t + pad.b + innerH;
+  const innerW = W - pad.l - pad.r;
+  const maxV = Math.max(...data.map(d => d[1]));
+  const bh = Math.max(10, rowH - 8);
+  data.forEach(([k, n], i) => {
+    const y = pad.t + i * rowH + (rowH - bh) / 2;
+    const w = (n / maxV) * innerW;
+    const desc = descFn ? (descFn(k) || "") : "";
+    const tooltip = desc ? `${k} — ${n.toLocaleString()}\n${desc}` : `${k}: ${n.toLocaleString()}`;
+
+    // Wrap the label text in a group so the SVG <title> tooltip works on the
+    // label and the bar alike.
+    const labelG = svg("g", { style: "cursor: help;" });
+    labelG.appendChild(svg("title", { text: tooltip }));
+    labelG.appendChild(svg("text", { class: "label", x: pad.l - 6, y: y + bh - 5, "text-anchor": "end", text: k }));
+    root.appendChild(labelG);
+
+    const r = svg("rect", { class: "bar", x: pad.l, y, width: w, height: bh, style: "cursor: help;" });
+    r.appendChild(svg("title", { text: tooltip }));
+    root.appendChild(r);
+
+    const valG = svg("g", { style: "cursor: help;" });
+    valG.appendChild(svg("title", { text: tooltip }));
+    valG.appendChild(svg("text", { class: "value-label", x: pad.l + w + 4, y: y + bh - 5, text: n.toLocaleString() }));
+    root.appendChild(valG);
+  });
+  root.setAttribute('viewBox', `0 0 ${W} ${H}`);
+}
+
+function drawTopDistricts(subset, selectedDistrict) {
+  const container = $("#top-districts");
+  clear(container);
+  // When the user has picked a single district, show that district's
+  // sanction-type breakdown (more useful than a "top 1" list).
+  if (selectedDistrict) {
+    const m = countBy(subset, r => rec(r,"s"));
+    const list = Array.from(m.entries()).sort((a,b)=>b[1]-a[1]);
+    if (list.length === 0) {
+      const d = el("div", { text: "No records for this district." });
+      d.style.color = "var(--muted)";
+      d.style.gridColumn = "1 / -1";
+      container.appendChild(d);
+      return;
+    }
+    const maxV = list[0][1];
+    for (const [k, n] of list) {
+      container.appendChild(el("div", { class: "row" }, [
+        el("div", { class: "name", text: k }),
+        el("div", { class: "n", text: n.toLocaleString() }),
+      ]));
+      const bg = el("div", { class: "bar-bg" });
+      const fg = el("div", { class: "bar-fg" });
+      fg.style.width = `${(n / maxV) * 100}%`;
+      bg.appendChild(fg);
+      container.appendChild(bg);
+    }
+    return;
+  }
+  const m = countBy(subset, r => rec(r,"ds"));
+  const list = Array.from(m.entries())
+    .filter(([k]) => k && k !== "None Identified" && k !== "N/A")
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 10);
+  if (list.length === 0) {
+    const d = el("div", { text: "No district data for this filter." });
+    d.style.color = "var(--muted)";
+    d.style.gridColumn = "1 / -1";
+    container.appendChild(d);
+    return;
+  }
+  const maxV = list[0][1];
+  for (const [k, n] of list) {
+    container.appendChild(el("div", { class: "row" }, [
+      el("div", { class: "name", text: k }),
+      el("div", { class: "n", text: n.toLocaleString() }),
+    ]));
+    const bg = el("div", { class: "bar-bg" });
+    const fg = el("div", { class: "bar-fg" });
+    fg.style.width = `${(n / maxV) * 100}%`;
+    bg.appendChild(fg);
+    container.appendChild(bg);
+  }
+}
+
+function drawPie(subset) {
+  const permanent = new Set(["Permanent Revocation","Permanent Surrender","Revocation"]);
+  const reversible = new Set(["Suspension","Probated Suspension","Indefinite Suspension","Restriction"]);
+  const reprimand = new Set(["Reprimand","Inscribed Reprimand"]);
+  const buckets = { "Permanent loss of certificate": 0, "Suspension / Restriction": 0, "Reprimand only": 0, "Other": 0 };
+  for (const r of subset) {
+    const s = rec(r,"s");
+    if (permanent.has(s)) buckets["Permanent loss of certificate"]++;
+    else if (reversible.has(s)) buckets["Suspension / Restriction"]++;
+    else if (reprimand.has(s)) buckets["Reprimand only"]++;
+    else buckets["Other"]++;
+  }
+  const total = Object.values(buckets).reduce((a,b)=>a+b,0);
+  const colors = { "Permanent loss of certificate": "#b3261e", "Suspension / Restriction": "#d99a00", "Reprimand only": "#1f4ea1", "Other": "#7e88a5" };
+  const root = $("#chart-pie");
+  clear(root);
+  const cx = 200, cy = 170, rad = 130;
+  if (total === 0) {
+    root.appendChild(svg("text", { x: cx, y: cy, "text-anchor": "middle", fill: "#5a6478", "font-size": 13, text: "No data" }));
+  } else {
+    let angle = -Math.PI / 2;
+    for (const [k, v] of Object.entries(buckets)) {
+      if (!v) continue;
+      const a2 = angle + (v / total) * Math.PI * 2;
+      const large = (a2 - angle) > Math.PI ? 1 : 0;
+      const x1 = cx + rad * Math.cos(angle), y1 = cy + rad * Math.sin(angle);
+      const x2 = cx + rad * Math.cos(a2), y2 = cy + rad * Math.sin(a2);
+      const path = svg("path", {
+        d: `M ${cx},${cy} L ${x1},${y1} A ${rad},${rad} 0 ${large} 1 ${x2},${y2} Z`,
+        fill: colors[k],
+      });
+      path.appendChild(svg("title", { text: `${k}: ${v.toLocaleString()} (${pct(v,total)})` }));
+      root.appendChild(path);
+      angle = a2;
+    }
+  }
+  const legend = $("#pie-legend");
+  clear(legend);
+  for (const [k, v] of Object.entries(buckets)) {
+    const item = el("span", { class: "item" });
+    const sw = el("span", { class: "sw" });
+    sw.style.background = colors[k];
+    item.appendChild(sw);
+    item.appendChild(document.createTextNode(`${k} — `));
+    item.appendChild(el("b", { text: v.toLocaleString() }));
+    item.appendChild(document.createTextNode(` (${pct(v,total)})`));
+    legend.appendChild(item);
+  }
+}
+
+applyFilters();
+</script>
+</body>
+</html>

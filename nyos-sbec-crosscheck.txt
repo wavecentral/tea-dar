@@ -1,0 +1,92 @@
+Loaded 16,259 SBEC records and 544 NYOS employees.
+
+## Summary: 58 candidate match(es) — 25 HIGH confidence (16 of which are a single clean match), 33 weak.
+
+### Most likely true matches (1 NYOS employee → 1 SBEC record, names agree on both given & surname)
+
+NYOS name               | Status   | Title                          | Dep yr | SBEC name               | Sanction            | Date       | District  | Period                  
+------------------------+----------+--------------------------------+--------+-------------------------+---------------------+------------+-----------+-------------------------
+Andrew Nguyen L         | current  | Teacher                        |        | Nguyen, Andrew          | Suspension          | 2016-05-31 | —         | FY 2015-2016            
+Bryan Ramirez           | current  | Teacher                        |        | Ramirez, Bryan          | Suspension          | 2023-02-22 | —         | FY 2022-2023            
+Christopher Mink G      | departed | Teacher                        | 2025   | Christopher, Chris      | Reprimand           | 2023-12-13 | —         | FY 2023-2024            
+Emily Stovall-Lathrop   | departed | Teacher                        | 2026   | Stovall, Emily C.       | Suspension          | 2022-04-19 | —         | FY 2021-2022            
+Gloria Ramon Gonzalez   | departed | School Counselor               | 2024   | Gonzalez, Gloria        | Suspension          | 2016-11-22 | —         | FY 2016-2017            
+James Thomas Novogoratz | current  | Teacher                        |        | Thomas, James Robert    | Suspension          | 2016-10-16 | —         | FY 2016-2017            
+James Wilson Douglas    | departed | Business Manager               | 2025   | Wilson, James Curtis S. | Inscribed Reprimand | 2017-03-24 | —         | FY 2016-2017            
+Kimberly Michelle Smith | departed | Teacher                        | 2023   | Smith, Kimberly         | Suspension          | 2014-03-24 | —         | 2013-01-01 to 2015-08-31
+Lindsey Smith           | current  | Teacher                        |        | Smith, Lindsey          | Inscribed Reprimand | 2016-08-17 | —         | FY 2015-2016            
+Maureen McGinn P        | current  | Librarian                      |        | McGinn, Maureen         | Voluntary Surrender | 2025-05-15 | —         | FY 2024-2025            
+Michelle Miller         | departed | Teacher                        | 2022   | Miller, Michelle        | Permanent Surrender | 2025-11-24 | Allen ISD | FY 2025-2026, Q1        
+Norma Reyes             | current  | Othr Lea Exempt Professnal Aux |        | Reyes, Norma Rae        | Inscribed Reprimand | 2013-06-28 | —         | 2013-01-01 to 2015-08-31
+Patrick Brown           | departed | Teacher                        | 2015   | Brown, Patrick Deshean  | Revocation          | 2011-04-18 | —         | 2008-01-01 to 2012-12-31
+Ricardo Levario         | departed | Teacher                        | 2022   | Levario-Cruz, Ricardo   | Reprimand           | 2019-08-06 | —         | FY 2018-2019            
+Steven Benjamin Brown   | departed | Teacher                        | 2022   | Brown, Steven A.        | Inscribed Reprimand | 2011-08-26 | —         | 2008-01-01 to 2012-12-31
+William Evan Johnson    | departed | Assistant Principal            | 2025   | Johnson, William James  | Suspension          | 2011-09-27 | —         | 2008-01-01 to 2012-12-31
+
+### All HIGH confidence matches (incl. multi-record swarms — likely common-name noise for those) (18 employee(s), 25 record(s))
+
+NYOS name               | Status   | Latest title                   | Dep. yr | SBEC name               | Sanction              | Date       | District    | Period                  
+------------------------+----------+--------------------------------+---------+-------------------------+-----------------------+------------+-------------+-------------------------
+Andrew Nguyen L         | current  | Teacher                        |         | Nguyen, Andrew          | Suspension            | 2016-05-31 |             | FY 2015-2016            
+Bryan Ramirez           | current  | Teacher                        |         | Ramirez, Bryan          | Suspension            | 2023-02-22 |             | FY 2022-2023            
+Christopher Mink G      | departed | Teacher                        | 2025    | Christopher, Chris      | Reprimand             | 2023-12-13 |             | FY 2023-2024            
+Emily Stovall-Lathrop   | departed | Teacher                        | 2026    | Stovall, Emily C.       | Suspension            | 2022-04-19 |             | FY 2021-2022            
+Gloria Ramon Gonzalez   | departed | School Counselor               | 2024    | Gonzalez, Gloria        | Suspension            | 2016-11-22 |             | FY 2016-2017            
+James Thomas Novogoratz | current  | Teacher                        |         | Thomas, James Robert    | Suspension            | 2016-10-16 |             | FY 2016-2017            
+James Wilson Douglas    | departed | Business Manager               | 2025    | Wilson, James Curtis S. | Inscribed Reprimand   | 2017-03-24 |             | FY 2016-2017            
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Medina, Jose S.         | Certificate Denied    | 2001-06-21 |             | 1993-01-01 to 2002-12-31
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Garcia, Jose            | Inscribed Reprimand   | 2006-09-14 |             | 2003-01-01 to 2007-12-31
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Medina, Jose            | Voluntary Surrender   | 2009-01-09 |             | 2008-01-01 to 2012-12-31
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Garcia, Jose A.         | Revocation            | 2011-05-10 |             | 2008-01-01 to 2012-12-31
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Garcia, Jose Raul Jr.   | Voluntary Surrender   | 2011-08-11 |             | 2008-01-01 to 2012-12-31
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Garcia, Jose G.         | Suspension            | 2024-04-26 |             | FY 2023-2024            
+Jose Medina Garcia      | departed | Teacher                        | 2017    | Garcia, Jose Luis       | Suspension            | 2024-10-15 |             | FY 2024-2025            
+Kimberly Michelle Smith | departed | Teacher                        | 2023    | Smith, Kimberly         | Suspension            | 2014-03-24 |             | 2013-01-01 to 2015-08-31
+Lindsey Smith           | current  | Teacher                        |         | Smith, Lindsey          | Inscribed Reprimand   | 2016-08-17 |             | FY 2015-2016            
+Maureen McGinn P        | current  | Librarian                      |         | McGinn, Maureen         | Voluntary Surrender   | 2025-05-15 |             | FY 2024-2025            
+Michelle Miller         | departed | Teacher                        | 2022    | Miller, Michelle        | Permanent Surrender   | 2025-11-24 | Allen ISD   | FY 2025-2026, Q1        
+Norma Reyes             | current  | Othr Lea Exempt Professnal Aux |         | Reyes, Norma Rae        | Inscribed Reprimand   | 2013-06-28 |             | 2013-01-01 to 2015-08-31
+Pamela Marie Jackson    | current  | Educational Aide               |         | Jackson, Pamela D.      | Suspension            | 2017-10-11 |             | FY 2017-2018            
+Pamela Marie Jackson    | current  | Educational Aide               |         | Jackson, Pamela         | Indefinite Suspension | 2025-11-03 | La Vega ISD | FY 2025-2026, Q1        
+Patrick Brown           | departed | Teacher                        | 2015    | Brown, Patrick Deshean  | Revocation            | 2011-04-18 |             | 2008-01-01 to 2012-12-31
+Ricardo Levario         | departed | Teacher                        | 2022    | Levario-Cruz, Ricardo   | Reprimand             | 2019-08-06 |             | FY 2018-2019            
+Steven Benjamin Brown   | departed | Teacher                        | 2022    | Brown, Steven A.        | Inscribed Reprimand   | 2011-08-26 |             | 2008-01-01 to 2012-12-31
+William Evan Johnson    | departed | Assistant Principal            | 2025    | Johnson, William James  | Suspension            | 2011-09-27 |             | 2008-01-01 to 2012-12-31
+
+### Weaker possible matches (only middle/given token matches — usually coincidences) (17 employee(s), 33 record(s))
+
+NYOS name                      | Status   | Latest title                        | Dep. yr | SBEC name                     | Sanction             | Date       | District | Period                  
+-------------------------------+----------+-------------------------------------+---------+-------------------------------+----------------------+------------+----------+-------------------------
+Benjamin Steven Brown          | departed | Teacher                             | 2018    | Brown, Steven A.              | Inscribed Reprimand  | 2011-08-26 |          | 2008-01-01 to 2012-12-31
+Benjamin Steven Brown          | departed | Teacher                             | 2018    | Brown, Kody Steven            | Permanent Revocation | 2019-07-26 |          | FY 2018-2019            
+Brenda Isabel Castillo Paiz de | departed | Custodial-Staff Srv In Aux/Spt Role | 2021    | Castillo, Ana Isabel          | Suspension           | 2016-04-15 |          | FY 2015-2016            
+Brown Steven Benjamin          | departed | Teacher                             | 2019    | Brown, Steven A.              | Inscribed Reprimand  | 2011-08-26 |          | 2008-01-01 to 2012-12-31
+Brown Steven Benjamin          | departed | Teacher                             | 2019    | Brown, Kody Steven            | Permanent Revocation | 2019-07-26 |          | FY 2018-2019            
+Cassandra Lynn Davis           | current  | Educational Aide                    |         | Davis, Debra Lynn             | Voluntary Surrender  | 2012-12-28 |          | 2008-01-01 to 2012-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Medina, Jose S.               | Certificate Denied   | 2001-06-21 |          | 1993-01-01 to 2002-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Garcia, Jose                  | Inscribed Reprimand  | 2006-09-14 |          | 2003-01-01 to 2007-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Medina, Jose                  | Voluntary Surrender  | 2009-01-09 |          | 2008-01-01 to 2012-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Garcia, Jose A.               | Revocation           | 2011-05-10 |          | 2008-01-01 to 2012-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Garcia, Jose Raul Jr.         | Voluntary Surrender  | 2011-08-11 |          | 2008-01-01 to 2012-12-31
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Garcia, Jose G.               | Suspension           | 2024-04-26 |          | FY 2023-2024            
+Efrain Jose Medina Garcia      | departed | Teacher                             | 2018    | Garcia, Jose Luis             | Suspension           | 2024-10-15 |          | FY 2024-2025            
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Medina, Jose S.               | Certificate Denied   | 2001-06-21 |          | 1993-01-01 to 2002-12-31
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Garcia, Jose                  | Inscribed Reprimand  | 2006-09-14 |          | 2003-01-01 to 2007-12-31
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Medina, Jose                  | Voluntary Surrender  | 2009-01-09 |          | 2008-01-01 to 2012-12-31
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Garcia, Jose A.               | Revocation           | 2011-05-10 |          | 2008-01-01 to 2012-12-31
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Garcia, Jose Raul Jr.         | Voluntary Surrender  | 2011-08-11 |          | 2008-01-01 to 2012-12-31
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Garcia, Jose G.               | Suspension           | 2024-04-26 |          | FY 2023-2024            
+Garcia Medina Jose Efrain      | departed | Teacher                             | 2019    | Garcia, Jose Luis             | Suspension           | 2024-10-15 |          | FY 2024-2025            
+James Thomas Novogoratz        | current  | Teacher                             |         | Thomas, Edward James Jr       | Suspension           | 2008-01-07 |          | 2008-01-01 to 2012-12-31
+Kimberly Michelle Smith        | departed | Teacher                             | 2023    | Smith, Rebecca Michelle       | Suspension           | 2012-10-05 |          | 2008-01-01 to 2012-12-31
+Leslie Ann White               | departed | Busness/Finance Clerical            | 2020    | White, Debra Ann              | Permanent Revocation | 2018-08-03 |          | FY 2017-2018            
+Michelle Miller                | departed | Teacher                             | 2022    | Miller, Kimberly Michelle     | Suspension           | 2024-06-26 |          | FY 2023-2024            
+Nicole Rae Davis               | departed | Teacher                             | 2024    | Davis-Sanchez, Melanie Nicole | Suspension           | 2019-04-15 |          | FY 2018-2019            
+Pamela Marie Jackson           | current  | Educational Aide                    |         | Jackson, Lainie Marie         | Suspension           | 2013-12-17 |          | 2013-01-01 to 2015-08-31
+Powell Whitney Lee             | departed | Teacher                             | 2019    | Powell, Lee Ann               | Suspension           | 2011-07-19 |          | 2008-01-01 to 2012-12-31
+Powell Whitney Lee             | departed | Teacher                             | 2019    | Powell, Robin Lee             | Reprimand            | 2022-11-10 |          | FY 2022-2023            
+Shade Nicole Smith             | departed | Lssp/Psychologist                   | 2023    | Smith, Haleigh Nicole         | Suspension           | 2020-06-26 |          | FY 2019-2020            
+Simon Louise Donnea            | departed | Teacher                             | 2023    | Simon, Donnea Louise          | Suspension           | 2012-10-09 |          | 2008-01-01 to 2012-12-31
+Steven Benjamin Brown          | departed | Teacher                             | 2022    | Brown, Kody Steven            | Permanent Revocation | 2019-07-26 |          | FY 2018-2019            
+Wilson Curtis B                | departed | Principal                           | 2019    | Wilson, James Curtis S.       | Inscribed Reprimand  | 2017-03-24 |          | FY 2016-2017            
+Wilson Curtis B                | departed | Principal                           | 2019    | Wilson, Curtis                | Suspension           | 2023-03-01 |          | FY 2022-2023            
