@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compose dar.html — a fully self-contained one-pager.
+"""Compose index.html — a fully self-contained one-pager.
 
 Embeds records.json in a compact columnar form and inlines styles + JS.
 """
@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 RECORDS = Path(__file__).resolve().parent / "records.json"
 TEMPLATE = Path(__file__).resolve().parent / "template.html"
-OUT = ROOT / "dar.html"
+OUT = ROOT / "index.html"
 
 
 def main() -> int:
