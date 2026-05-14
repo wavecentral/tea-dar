@@ -156,6 +156,44 @@
   }
   button.btn.primary:hover { background: #1a4290; }
 
+  .engine-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    padding-left: 8px;
+    border-left: 1px solid var(--border);
+  }
+  .engine-toggle-group {
+    display: inline-flex;
+    border: 1px solid var(--border-strong);
+    border-radius: 5px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .engine-toggle-group button {
+    background: #fff;
+    border: 0;
+    padding: 5px 10px;
+    font: inherit;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-right: 1px solid var(--border-strong);
+    line-height: 1;
+  }
+  .engine-toggle-group button:last-child { border-right: 0; }
+  .engine-toggle-group button:hover { background: var(--chip); }
+  .engine-toggle-group button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .engine-toggle-group button svg { display: block; }
+
   table.results {
     width: 100%;
     background: var(--panel);
@@ -510,6 +548,13 @@
 
   <div class="toolbar no-print">
     <span class="count">Showing <b id="shown-count">0</b> of <b id="total-count">0</b> records</span>
+    <span class="engine-toggle" role="group" aria-label="Web search engine">
+      <span>Search with:</span>
+      <span class="engine-toggle-group" id="engine-toggle-group">
+        <button type="button" data-engine="google" class="active" title="Use Google for the deep, name+teacher, and TEA-site searches">Google</button>
+        <button type="button" data-engine="bing" title="Use Bing for the deep, name+teacher, and TEA-site searches">Bing</button>
+      </span>
+    </span>
     <span class="spacer"></span>
     <button class="btn" id="btn-reset">Reset filters</button>
     <button class="btn" id="btn-csv">Export CSV</button>
@@ -805,7 +850,18 @@ for (const arr of EDUCATOR_RECORDS.values()) {
   arr.sort((a, b) => (rec(b,"d") || "").localeCompare(rec(a,"d") || ""));
 }
 
-function buildGoogleQuery(r) {
+const SEARCH_ENGINE_KEY = "tea-dar.searchEngine";
+const SEARCH_ENGINE = {
+  google: { base: "https://www.google.com/search?q=" },
+  bing:   { base: "https://www.bing.com/search?q="   },
+};
+let currentEngine = (localStorage.getItem(SEARCH_ENGINE_KEY) === "bing") ? "bing" : "google";
+
+function searchUrl(query) {
+  return SEARCH_ENGINE[currentEngine].base + encodeURIComponent(query);
+}
+
+function buildDeepQuery(r) {
   const first = rec(r, "f");
   const last = rec(r, "l");
   const district = rec(r, "ds");
@@ -814,7 +870,7 @@ function buildGoogleQuery(r) {
   const kw = (ALLEGATION_KEYWORDS[code] || "").trim();
   const cleanDistrict = (district && district !== "None Identified" && district !== "N/A") ? district : "";
   const parts = [first, last, "teacher", cleanDistrict, year, kw, "-site:tea.texas.gov"].filter(Boolean);
-  return "https://www.google.com/search?q=" + encodeURIComponent(parts.join(" "));
+  return searchUrl(parts.join(" "));
 }
 
 function buildTeacherQuery(r) {
@@ -822,8 +878,7 @@ function buildTeacherQuery(r) {
   const first = rec(r, "f");
   const last = rec(r, "l");
   if (!first && !last) return "";
-  const q = `+"${(first + " " + last).trim()}" teacher -site:tea.texas.gov`;
-  return "https://www.google.com/search?q=" + encodeURIComponent(q);
+  return searchUrl(`+"${(first + " " + last).trim()}" teacher -site:tea.texas.gov`);
 }
 
 function buildTeaQuery(r) {
@@ -831,8 +886,7 @@ function buildTeaQuery(r) {
   const first = rec(r, "f");
   const last = rec(r, "l");
   if (!first && !last) return "";
-  const q = `+"${(first + " " + last).trim()}" site:tea.texas.gov`;
-  return "https://www.google.com/search?q=" + encodeURIComponent(q);
+  return searchUrl(`+"${(first + " " + last).trim()}" site:tea.texas.gov`);
 }
 
 function svgIcon(kind) {
@@ -851,6 +905,25 @@ function svgIcon(kind) {
       p.setAttribute("fill", fill); p.setAttribute("d", d);
       s.appendChild(p);
     }
+  } else if (kind === "bing") {
+    // Bing — rounded teal tile with a bold italic "b"
+    s.setAttribute("viewBox", "0 0 48 48");
+    const bg = document.createElementNS(SVG_NS, "rect");
+    bg.setAttribute("x", "2"); bg.setAttribute("y", "2");
+    bg.setAttribute("width", "44"); bg.setAttribute("height", "44");
+    bg.setAttribute("rx", "9");
+    bg.setAttribute("fill", "#008373");
+    s.appendChild(bg);
+    const t = document.createElementNS(SVG_NS, "text");
+    t.setAttribute("x", "24"); t.setAttribute("y", "37");
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("font-family", "Arial,Helvetica,sans-serif");
+    t.setAttribute("font-size", "36");
+    t.setAttribute("font-weight", "700");
+    t.setAttribute("font-style", "italic");
+    t.setAttribute("fill", "#ffffff");
+    t.textContent = "b";
+    s.appendChild(t);
   } else if (kind === "teacher") {
     // Graduation cap (mortarboard) — green
     s.setAttribute("viewBox", "0 0 24 24");
@@ -987,17 +1060,19 @@ function makeTeaCertButton(r) {
 }
 
 function makeSearchButton(r) {
-  return makeSearchBtn({
-    icon: "google",
-    tooltip: "Deep search — Google search with name, district, year, and allegation keywords; excludes tea.texas.gov.",
-    urlFor: () => buildGoogleQuery(r),
+  const btn = makeSearchBtn({
+    icon: currentEngine,
+    tooltip: "Deep search — web search with name, district, year, and allegation keywords; excludes tea.texas.gov.",
+    urlFor: () => buildDeepQuery(r),
   });
+  btn.classList.add("engine-icon-btn");
+  return btn;
 }
 
 function makeTeacherSearchButton(r) {
   return makeSearchBtn({
     icon: "teacher",
-    tooltip: 'Name + Teacher search — exact-match search for "First Last" + teacher (Google, excludes tea.texas.gov).',
+    tooltip: 'Name + Teacher search — exact-match web search for "First Last" + teacher (excludes tea.texas.gov).',
     urlFor: () => buildTeacherQuery(r),
   });
 }
@@ -1005,10 +1080,29 @@ function makeTeacherSearchButton(r) {
 function makeTeaSearchButton(r) {
   return makeSearchBtn({
     icon: "tea",
-    tooltip: 'TEA records search — exact-match search for "First Last" restricted to tea.texas.gov.',
+    tooltip: 'TEA records search — exact-match web search for "First Last" restricted to tea.texas.gov.',
     urlFor: () => buildTeaQuery(r),
   });
 }
+
+function setSearchEngine(name) {
+  currentEngine = (name === "bing") ? "bing" : "google";
+  try { localStorage.setItem(SEARCH_ENGINE_KEY, currentEngine); } catch(e) {}
+  $$('#engine-toggle-group button').forEach(b => {
+    b.classList.toggle('active', b.dataset.engine === currentEngine);
+  });
+  // Swap the icon on every Deep-search button currently in the DOM.
+  document.querySelectorAll('.engine-icon-btn').forEach(btn => {
+    const oldSvg = btn.querySelector('svg');
+    if (oldSvg) oldSvg.replaceWith(svgIcon(currentEngine));
+  });
+}
+
+$$('#engine-toggle-group button').forEach(b => {
+  b.addEventListener('click', () => setSearchEngine(b.dataset.engine));
+});
+// Apply persisted choice on load (sets active class + icons for any pre-rendered rows).
+setSearchEngine(currentEngine);
 
 function appendSearchCells(tr, r) {
   const td1 = el("td", { class: "tool-col" }); td1.appendChild(makeSearchButton(r));        tr.appendChild(td1);
