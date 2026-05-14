@@ -156,14 +156,17 @@
   }
   button.btn.primary:hover { background: #1a4290; }
 
+  .engine-toggle-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 4px 8px 4px;
+  }
   .engine-toggle {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 12px;
     color: var(--muted);
-    padding-left: 8px;
-    border-left: 1px solid var(--border);
   }
   .engine-toggle-group {
     display: inline-flex;
@@ -548,17 +551,20 @@
 
   <div class="toolbar no-print">
     <span class="count">Showing <b id="shown-count">0</b> of <b id="total-count">0</b> records</span>
-    <span class="engine-toggle" role="group" aria-label="Web search engine">
-      <span>Search with:</span>
-      <span class="engine-toggle-group" id="engine-toggle-group">
-        <button type="button" data-engine="google" class="active" title="Use Google for the deep, name+teacher, and TEA-site searches">Google</button>
-        <button type="button" data-engine="bing" title="Use Bing for the deep, name+teacher, and TEA-site searches">Bing</button>
-      </span>
-    </span>
     <span class="spacer"></span>
     <button class="btn" id="btn-reset">Reset filters</button>
     <button class="btn" id="btn-csv">Export CSV</button>
     <button class="btn primary" id="btn-print">Print results</button>
+  </div>
+
+  <div class="engine-toggle-bar no-print">
+    <span class="engine-toggle" role="group" aria-label="Web search engine">
+      <span>Search with:</span>
+      <span class="engine-toggle-group" id="engine-toggle-group">
+        <button type="button" data-engine="bing" class="active" title="Use Bing for the deep, name+teacher, and TEA-site searches">Bing</button>
+        <button type="button" data-engine="google" title="Use Google for the deep, name+teacher, and TEA-site searches">Google</button>
+      </span>
+    </span>
   </div>
 
   <table class="results">
@@ -855,38 +861,54 @@ const SEARCH_ENGINE = {
   google: { base: "https://www.google.com/search?q=" },
   bing:   { base: "https://www.bing.com/search?q="   },
 };
-let currentEngine = (localStorage.getItem(SEARCH_ENGINE_KEY) === "bing") ? "bing" : "google";
+// Default to Bing; Google only if explicitly persisted.
+let currentEngine = (localStorage.getItem(SEARCH_ENGINE_KEY) === "google") ? "google" : "bing";
 
 function searchUrl(query) {
   return SEARCH_ENGINE[currentEngine].base + encodeURIComponent(query);
 }
 
+// Build quoted name terms. Each name is its own quoted phrase so the result
+// matches BOTH "First Last" and "Last, First" orderings (common in school
+// directories). The "+" prefix is dropped — Google and Bing both ignore it
+// today; double quotes are the supported way to force a term to appear.
+// Only the first token of the SBEC "first name" field is used; the rest is
+// usually a middle name that may not appear on third-party pages.
+function nameTerms(r) {
+  const fullFirst = (rec(r, "f") || "").trim();
+  const last = (rec(r, "l") || "").trim();
+  const { first } = splitFirstMiddle(fullFirst);
+  const out = [];
+  if (first) out.push(`"${first}"`);
+  if (last)  out.push(`"${last}"`);
+  return out;
+}
+
 function buildDeepQuery(r) {
-  const first = rec(r, "f");
-  const last = rec(r, "l");
+  const names = nameTerms(r);
   const district = rec(r, "ds");
   const year = (rec(r, "d") || "").slice(0, 4);
   const code = rec(r, "a");
   const kw = (ALLEGATION_KEYWORDS[code] || "").trim();
   const cleanDistrict = (district && district !== "None Identified" && district !== "N/A") ? district : "";
-  const parts = [first, last, "teacher", cleanDistrict, year, kw, "-site:tea.texas.gov"].filter(Boolean);
+  const parts = [...names, "teacher"];
+  if (cleanDistrict) parts.push(`"${cleanDistrict}"`);
+  if (year) parts.push(year);
+  if (kw) parts.push(kw);
+  parts.push("-site:tea.texas.gov");
   return searchUrl(parts.join(" "));
 }
 
 function buildTeacherQuery(r) {
-  // Exact-name match, +teacher, excludes the TEA site.
-  const first = rec(r, "f");
-  const last = rec(r, "l");
-  if (!first && !last) return "";
-  return searchUrl(`+"${(first + " " + last).trim()}" teacher -site:tea.texas.gov`);
+  const names = nameTerms(r);
+  if (names.length === 0) return "";
+  return searchUrl([...names, "teacher", "-site:tea.texas.gov"].join(" "));
 }
 
 function buildTeaQuery(r) {
-  // Exact-name match restricted to the TEA site.
-  const first = rec(r, "f");
-  const last = rec(r, "l");
-  if (!first && !last) return "";
-  return searchUrl(`+"${(first + " " + last).trim()}" site:tea.texas.gov`);
+  const names = nameTerms(r);
+  if (names.length === 0) return "";
+  return searchUrl([...names, "site:tea.texas.gov"].join(" "));
 }
 
 function svgIcon(kind) {
@@ -906,24 +928,21 @@ function svgIcon(kind) {
       s.appendChild(p);
     }
   } else if (kind === "bing") {
-    // Bing — rounded teal tile with a bold italic "b"
+    // Bing (Microsoft) — the four-square Microsoft logo.
     s.setAttribute("viewBox", "0 0 48 48");
-    const bg = document.createElementNS(SVG_NS, "rect");
-    bg.setAttribute("x", "2"); bg.setAttribute("y", "2");
-    bg.setAttribute("width", "44"); bg.setAttribute("height", "44");
-    bg.setAttribute("rx", "9");
-    bg.setAttribute("fill", "#008373");
-    s.appendChild(bg);
-    const t = document.createElementNS(SVG_NS, "text");
-    t.setAttribute("x", "24"); t.setAttribute("y", "37");
-    t.setAttribute("text-anchor", "middle");
-    t.setAttribute("font-family", "Arial,Helvetica,sans-serif");
-    t.setAttribute("font-size", "36");
-    t.setAttribute("font-weight", "700");
-    t.setAttribute("font-style", "italic");
-    t.setAttribute("fill", "#ffffff");
-    t.textContent = "b";
-    s.appendChild(t);
+    const squares = [
+      { x: 4,  y: 4,  fill: "#F25022" },  // red, top-left
+      { x: 25, y: 4,  fill: "#7FBA00" },  // green, top-right
+      { x: 4,  y: 25, fill: "#00A4EF" },  // blue, bottom-left
+      { x: 25, y: 25, fill: "#FFB900" },  // yellow, bottom-right
+    ];
+    for (const { x, y, fill } of squares) {
+      const r = document.createElementNS(SVG_NS, "rect");
+      r.setAttribute("x", x); r.setAttribute("y", y);
+      r.setAttribute("width", "19"); r.setAttribute("height", "19");
+      r.setAttribute("fill", fill);
+      s.appendChild(r);
+    }
   } else if (kind === "teacher") {
     // Graduation cap (mortarboard) — green
     s.setAttribute("viewBox", "0 0 24 24");
